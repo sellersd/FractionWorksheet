@@ -1,17 +1,16 @@
 \documentclass[12pt]{exam}
 \usepackage[utf8]{inputenc}
 \usepackage{multicol, graphicx, amsmath}
-\title{WS-Limits of Rational Functions}
+\title{WS-FractionOperations}
 \author{ }
-\date{January 2020}
+\date{November 2020}
 
 %%----------------Commands-----------------------%%
 \newcommand{\class}{}
 \newcommand{\name}{Name}
 \newcommand{\school}{Jasper High School}
 \newcommand{\instructor}{David Sellers}
-\newcommand{\directionsEquation}{Write an equation for each given circle.}
-\newcommand{\directionsGraph}{Graph each equation.}
+\newcommand{\directions}{}
 %%-----------------------------------------------%%
 
 
@@ -34,8 +33,7 @@
 \printanswers
 \unframedsolutions
 
-%\question$(x-h)^{2} + (y-k)^{2} = r^{2}$
-
 \begin{document}
 
-    \begin{questions}
+\begin{questions}
+
