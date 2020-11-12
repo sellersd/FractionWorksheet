@@ -29,6 +29,10 @@
 \runningfootrule{}
 %%---------------------------------------------%%
 
+
+\printanswers
+\unframedsolutions
+
 \begin{document}
 
 \begin{questions}

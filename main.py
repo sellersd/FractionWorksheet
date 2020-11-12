@@ -105,6 +105,9 @@ class MultiplesFactorsProblems:
 with open('head.txt', 'r') as infile:
     head = infile.read()
 
+with open('head_solutions.txt', 'r') as infile:
+    head_solutions = infile.read()
+
 with open('tail.txt', 'r') as infile:
     tail = infile.read()
 
@@ -132,16 +135,19 @@ with open('WS-Fractions.tex', 'w') as of:
         ops_list.append('/')
     # Write preamble for tex file
     # Print solutions if options selected
+    head_solutions_list = head_solutions.split('\n')
     head_list = head.split('\n')
     tail_list = tail.split('\n')
-    if include_solutions:
-        head_list = ['\\printanswers' if x == '%\\printanswers' else x for x in head_list]
-    else:
-        head_list = ['%\\printanswers' if x == '\\printanswers' else x for x in head_list]
+
+    # if include_solutions:
+    #     head_list = ['\\printanswers' if x == '%\\printanswers' else x for x in head_list]
+    # else:
+    #     head_list = ['%\\printanswers' if x == '\\printanswers' else x for x in head_list]
     if num_questions > 25:
+        head_solutions_list.append('\n\\begin{multicols}{2}\n')
         head_list.append('\n\\begin{multicols}{2}\n')
         tail_list.insert(0, '\n\\end{multicols}\n')
-    of.write('\n'.join(head_list))
+    # of.write('\n'.join(head_list))
 
     # Create LCM, GCD questions
 
@@ -165,7 +171,16 @@ with open('WS-Fractions.tex', 'w') as of:
             p = Problem(fractions[0], fractions[1], ops_list)
 
             out = TexOutputProblem(p)
-            of.writelines(out.output)
+            for line in out.output:
+                head_list.append(line)
+                head_solutions_list.append(line)
+    for line in tail_list:
+        head_list.append(line)
+        head_solutions_list.append(line)
+    of.write('\n'.join(head_list))
+
+    with open('WS-Fractions-Solutions.tex', 'w') as of:
+        of.write('\n'.join(head_solutions_list))
 
     # Write closing statements
-    of.write('\n'.join(tail_list))
+#    of.write('\n'.join(tail_list))
