@@ -29,9 +29,8 @@ class CreateFraction:
 
 
 class Problem:
-    def __init__(self, fraction_1, fraction_2):
-        self.ops_list = ['+', '-', '*', '/']
-        self.operation = r.choice(self.ops_list)
+    def __init__(self, fraction_1, fraction_2, ops_list):
+        self.operation = r.choice(ops_list)
         self.problem = '$' + self.create_problem(fraction_1, fraction_2) + '$'
         self.solution = '$' + self.create_solution(fraction_1, fraction_2) + '$'
 
@@ -77,6 +76,7 @@ class MultiplesFactorsProblems:
         self.solutionNumerical = self.create_solution()
         self.solution = self.texify_solution()
 
+
     def convert_list_to_string(self):
         str_of_nums = ''
         for x in range(len(self.nums)):
@@ -94,7 +94,8 @@ class MultiplesFactorsProblems:
 
     def texify_solution(self):
         return 'The GCD is ' + str(self.solutionNumerical[0]) + \
-                ' and the LCM is ' + str(self.solutionNumerical[1])
+               ' and the LCM is ' + str(self.solutionNumerical[1])
+
 
     def create_problem(self):
         return 'Find the GCD and LCM of ' + self.str_nums + '.\n'
@@ -109,22 +110,62 @@ with open('tail.txt', 'r') as infile:
 
 # Open tex file for writing
 with open('WS-Fractions.tex', 'w') as of:
-    # Write preamble for tex file
-    of.writelines(head)
-
     # Number of problems to be produced.
-    num_questions = 20
-    q1 = MultiplesFactorsProblems()
-    print(TexOutputProblem(q1))
+    num_questions = 50
+    include_factors = False
+    include_fractions = True
+    include_solutions = False
+    allow_common_denominator = False
+    include_addition = True
+    include_subtraction = True
+    include_multiplication = True
+    include_division = True
+
+    ops_list = []
+    if include_addition:
+        ops_list.append('+')
+    if include_subtraction:
+        ops_list.append('-')
+    if include_multiplication:
+        ops_list.append('*')
+    if include_division:
+        ops_list.append('/')
+    # Write preamble for tex file
+    # Print solutions if options selected
+    head_list = head.split('\n')
+    tail_list = tail.split('\n')
+    if include_solutions:
+        head_list = ['\\printanswers' if x == '%\\printanswers' else x for x in head_list]
+    else:
+        head_list = ['%\\printanswers' if x == '\\printanswers' else x for x in head_list]
+    if num_questions > 25:
+        head_list.append('\n\\begin{multicols}{2}\n')
+        tail_list.insert(0, '\n\\end{multicols}\n')
+    of.write('\n'.join(head_list))
+
+    # Create LCM, GCD questions
+
+    if include_factors:
+        for x in range(num_questions):
+            q1 = MultiplesFactorsProblems()
+            of.writelines(TexOutputProblem(q1).output)
     # Loom to create selected number of Fraction Operation questions
     # Create problems
     # Write to file
-    for x in range(num_questions):
-        fractions = [CreateFraction(), CreateFraction()]
-        p = Problem(fractions[0], fractions[1])
+    if include_fractions:
+        for x in range(num_questions):
+            fractions = [CreateFraction(), CreateFraction()]
+            if allow_common_denominator:
+                while fractions[0].frac.denominator == 1 and fractions[1].frac.denominator == 1:
+                    fractions = [CreateFraction(), CreateFraction()]
+            else:
+                while fractions[0].frac.denominator == fractions[1].frac.denominator:
+                    fractions = [CreateFraction(), CreateFraction()]
 
-        out = TexOutputProblem(p)
-        of.writelines(out.output)
+            p = Problem(fractions[0], fractions[1], ops_list)
+
+            out = TexOutputProblem(p)
+            of.writelines(out.output)
 
     # Write closing statements
-    of.writelines(tail)
+    of.write('\n'.join(tail_list))
