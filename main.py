@@ -2,7 +2,12 @@ from fractions import Fraction as Frac
 from numpy import random as r
 from numpy import lcm
 from numpy import gcd
+from datetime import datetime as dt
 
+# date = dt.now().isoformat()
+date = dt.now().strftime('%m%d%y%H%M%S')
+print(date)
+# date = dt.now().strftime('%m%d%y%H%M%S')
 values = [x for x in range(1, 15)]
 
 
@@ -112,7 +117,7 @@ with open('tail.txt', 'r') as infile:
     tail = infile.read()
 
 # Open tex file for writing
-with open('WS-Fractions.tex', 'w') as of:
+with open('WS-Fractions' + date + '.tex', 'w') as of:
     # Number of problems to be produced.
     num_questions = 50
     include_factors = False
@@ -179,7 +184,7 @@ with open('WS-Fractions.tex', 'w') as of:
         head_solutions_list.append(line)
     of.write('\n'.join(head_list))
 
-    with open('WS-Fractions-Solutions.tex', 'w') as of:
+    with open('WS-Fractions-Solutions' + date + '.tex', 'w') as of:
         of.write('\n'.join(head_solutions_list))
 
     # Write closing statements
